@@ -1,0 +1,21 @@
+for some reason my thing doesn't notice these aren't the same ???
+
+[ TOP: h24
+  INDEX: e21
+  RELS: < [ unknown LBL: h23 ARG: h11 ARG0: e21 ]
+          [ def_udef_a_q LBL: h20 ARG0: h11 RSTR: h18 BODY: h19 ]
+          [ _un-_a_neg LBL: h1 ARG0: i6 ARG1: e9 ]
+          [ _know_v_1 LBL: h1 ARG0: e9 ARG1: i10 ARG2: h11 ]
+          [ _desk_n_1 LBL: h1 ARG0: h11 ] >
+  HCONS: < h18 qeq h1 h24 qeq h23 > ]
+
+
+[ TOP: h0
+  INDEX: e2 [ e SF: prop ]
+  RELS: < [ unknown<0:16> LBL: h1 ARG: x4 [ x PERS: 3 NUM: sg IND: + ] ARG0: e2 ]
+          [ _the_q<0:3> LBL: h5 ARG0: x4 RSTR: h6 BODY: h7 ]
+          [ _know_v_1<4:11> LBL: h8 ARG0: e9 [ e SF: prop TENSE: untensed MOOD: indicative PROG: bool PERF: - ] ARG1: i10 ARG2: x4 ]
+          [ _un-_a_rvrs<4:11> LBL: h8 ARG0: e9 ARG1: e9 ]
+          [ _desk_n_1<12:16> LBL: h8 ARG0: x4 ] >
+  HCONS: < h0 qeq h1 h6 qeq h8 >
+  ICONS: < e9 topic x4 > ]

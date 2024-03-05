@@ -1,0 +1,19 @@
+{
+  "relationTypes": ["NODE", "PARENT_HOLE", "PARENT_PLUG", "EDGE_PRED_PARENT_CHILD", "HEAD_FIRST_NODE", "HEAD_SECOND_NODE"],
+  "basic": ["NODE"],
+  "noun_ssement": ["NODE"],
+  "adjective_ssement": ["NODE"],
+  "verb_ssement": ["NODE"],
+  "quant_ssement": ["NODE"],
+  "preposition_ssement": ["NODE"],
+  "compound": ["HEAD_SECOND_NODE"],
+  "quantify": ["PARENT_PLUG"],
+  "adjective": ["PARENT_PLUG", "HEAD_SECOND_NODE"],
+  "past_participle": ["PARENT_PLUG"],
+  "preposition": ["EDGE_PRED_PARENT_CHILD"],
+  "relative_direction": ["EDGE_PRED_PARENT_CHILD"],
+  "boolean": ["EDGE_PRED_PARENT_CHILD"],
+  "descriptor": ["PARENT_PLUG"],
+  "possessive": ["HEAD_SECOND_NODE"],
+  "prefix": ["HEAD_SECOND_NODE"]
+}
