@@ -14,7 +14,7 @@ parent_data_dir = global_config['parent_data_directory']
 
 # Load elements from local config
 # TODO: hardcoded now, in the future can be adjusted to load each lexicon for each scenario
-data_directory = os.path.join(parent_data_dir, "Heal_TheTrees")
+data_directory = os.path.join(parent_data_dir, "Scenario")
 local_config_path = os.path.join(data_directory, "local_config.yml")
 local_config = yaml.safe_load((open(local_config_path)))
 graph_directory = local_config['graph_directory']

@@ -404,6 +404,8 @@ def graph_to_mrs(root, graph, lexicon, node_count=0, edge_count=0):
         child_conversion_result = graph_to_mrs(child, graph, lexicon, node_count, edge_count)
         child_mrs = child_conversion_result[0]
         child_eval_info = child_conversion_result[1]
+        node_count = child_conversion_result[2]
+        edge_count = child_conversion_result[3]
 
         # 4. compose child_mrs with the root
         edge = graph.get_edge_data(root, child)

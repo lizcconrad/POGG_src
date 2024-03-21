@@ -4,6 +4,8 @@
 
 # taken from the _mrs.py file to test my subclass
 from typing import Optional, Iterable, Mapping, Dict
+
+import delphin.semi
 from delphin.lnk import Lnk
 # end from _mrs.py
 
@@ -190,7 +192,13 @@ def create_base_SSEMENT(predicate, variables={}, index_arg='ARG0'):
     # this function lets me determine at the time of creating the base SSEMENT what's happening
     # so at the time of starting composition that decision will have to be made somehow
 
-    syn = SEMI.find_synopsis(predicate)
+    # TODO: ADDED DURING TESTING... just to prevent breaking
+    try:
+        syn = SEMI.find_synopsis(predicate)
+    except delphin.semi.SemIError:
+        raise ValueError("Couldn't find {} in the SEMI".format(predicate))
+
+    # syn = SEMI.find_synopsis(predicate)
     args = concretize(VAR_LABELER, syn)
     sep = SEP(predicate, VAR_LABELER.get_var_name('h'), args)
 

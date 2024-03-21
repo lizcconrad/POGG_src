@@ -46,6 +46,7 @@ def boolean_pass_part_ssement(predicates, variables={}, index_arg='ARG0'):
         true_ssement = verb_ssement(predicates[0], variables, index_arg)
 
     if type(predicates[1]) is list:
+        # TODO: this needs to set 'ARG1' as the index arg... i forgot to so it's gg
         prefix_ssement = basic(predicates[1][0])
         verbal_ssement = verb_ssement(predicates[1][1], variables, index_arg)
         # plug ARG1 of prefix with ARG0 of verbal, share labels
