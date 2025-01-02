@@ -1,7 +1,0 @@
-- all entries should just declare their type ... it's easier to have it guess but it's also less uniform and strange...
-- this might even help with the issue where adjectives assume ARG1 index...? like if i'm specific enough about the Type then it can be handled?
-- handle unknown predicates ... ? is this even possible? i guess the issue is the synopsis can't be found, but maybe i can force a synopsis... like ok gg it's a noun just give it an ARG0, maybe it could generate then? might want to test this
-- add ability to put full MRSs in lexicon? if you want something very specific ... though this is ... maybe not a good idea because a full MRS would be quantified and if it's a modifier of the head then it might not work so maybe not
-- ... make it possible to specify a specific string? like for cattlewrangler... but merging this with MRS is giving nightmare. maybe it just doesn't do composition for those and simply spits out the string, can't add world info like relationships and properties if this is what happens
-- deal with punctuation and number variation
-- maybe i need to make it so that the node and edge capabilities aren't so different ... like make them work the same/more consistently somehow? i didn't anticipate needing the same types of composition for both nodes and edges

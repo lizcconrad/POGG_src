@@ -1,23 +1,24 @@
 # File that contains various common forms of composition, refer to the function names here in your lexicon file
 # ORGANIZED: 01/04/2024
 # DOCUMENTED: 01/04/2024
-from GG.mrs_algebra import create_base_SSEMENT, op_scopal, op_non_scopal_lbl_shared, op_non_scopal_lbl_unshared
+# from GG.mrs_algebra import create_base_SSEMENT, op_scopal, op_non_scopal_lbl_shared, GG.mrs_algebra.op_non_scopal_lbl_unshared
+import GG.mrs_algebra
 import GG.mrs_util
 import re
 
 
 # ENTITY FUNCTIONS
-# Each of these simply passes the information to `mrs_algebra.create_base_SSEMENT`,
+# Each of these simply passes the information to `mrs_algebra.GG.mrs_algebra.create_base_SSEMENT`,
 # but they serve as wrappers because the graph-to-MRS algorithm, and the user's lexicon,
 # should only refer to things in composition_library, not the mrs_algebra directly.
 def basic(predicate, variables={}, index_arg='ARG0'):
-    return create_base_SSEMENT(predicate, variables, index_arg)
+    return GG.mrs_algebra.create_base_SSEMENT(predicate, variables, index_arg)
 
 
 # index_arg=ARG1 by default, because the ARG1 of an adjective is the thing it modifies,
 # which is typically what we want as the semantic index after composition with an adjective
 def adjective_ssement(predicate, variables={}, index_arg='ARG1'):
-    return create_base_SSEMENT(predicate, variables, index_arg)
+    return GG.mrs_algebra.create_base_SSEMENT(predicate, variables, index_arg)
 
 
 # for adjectival properties that are represented in the graph as a boolean value
@@ -58,33 +59,33 @@ def boolean_pass_part_ssement(predicates, variables={}, index_arg='ARG0'):
 
 
 def noun_ssement(predicate, variables={}, index_arg='ARG0'):
-    return create_base_SSEMENT(predicate, variables, index_arg)
+    return GG.mrs_algebra.create_base_SSEMENT(predicate, variables, index_arg)
 
 
 # index_arg=ARG1 by default, because the ARG1 of a preposition is the thing the preposition modifies,
 # which is typically what we want as the semantic index after composition with a preposition
 def preposition_ssement(predicate, variables={}, index_arg='ARG1'):
-    return create_base_SSEMENT(predicate, variables, index_arg)
+    return GG.mrs_algebra.create_base_SSEMENT(predicate, variables, index_arg)
 
 
 def pronoun_ssement(variables={}, index_arg='ARG0'):
-    pron = create_base_SSEMENT('pron', variables, index_arg)
+    pron = GG.mrs_algebra.create_base_SSEMENT('pron', variables, index_arg)
     pronoun_q = quant_ssement('pronoun_q')
 
-    return op_scopal(pronoun_q, pron)
+    return GG.mrs_algebra.op_scopal(pronoun_q, pron)
 
 
 def quant_ssement(predicate, variables={}, index_arg='ARG0'):
-    return create_base_SSEMENT(predicate, variables, index_arg)
+    return GG.mrs_algebra.create_base_SSEMENT(predicate, variables, index_arg)
 
 
 def verb_ssement(predicate, variables={}, index_arg='ARG0'):
-    return create_base_SSEMENT(predicate, variables, index_arg)
+    return GG.mrs_algebra.create_base_SSEMENT(predicate, variables, index_arg)
 
 
 # COMPOSITION FUNCTIONS
 def adjective(adj_ssement, nom_ssement):
-    return op_non_scopal_lbl_shared(adj_ssement, nom_ssement, 'ARG1')
+    return GG.mrs_algebra.op_non_scopal_lbl_shared(adj_ssement, nom_ssement, 'ARG1')
 
 
 def boolean(boolean_ssements, nom_ssement, child_ssement):
@@ -114,13 +115,13 @@ def boolean(boolean_ssements, nom_ssement, child_ssement):
 
 
 def compound(nonhead_ssement, head_ssement):
-    udef = create_base_SSEMENT('udef_q')
-    udef_nonhead = op_scopal(udef, nonhead_ssement)
+    udef = GG.mrs_algebra.create_base_SSEMENT('udef_q')
+    udef_nonhead = GG.mrs_algebra.op_scopal(udef, nonhead_ssement)
 
-    compound_ssement = create_base_SSEMENT('compound', {}, 'ARG1')
-    compound_ARG2 = op_non_scopal_lbl_unshared(compound_ssement, udef_nonhead, 'ARG2')
+    compound_ssement = GG.mrs_algebra.create_base_SSEMENT('compound', {}, 'ARG1')
+    compound_ARG2 = GG.mrs_algebra.op_non_scopal_lbl_unshared(compound_ssement, udef_nonhead, 'ARG2')
 
-    compound_final = op_non_scopal_lbl_shared(compound_ARG2, head_ssement, 'ARG1')
+    compound_final = GG.mrs_algebra.op_non_scopal_lbl_shared(compound_ARG2, head_ssement, 'ARG1')
     return compound_final
 
 
@@ -192,7 +193,7 @@ def passive_participle(v_ssement, nom_ssement):
     # if there is an ARG2, set that as the index
     if has_ARG2:
         part_ssement = GG.mrs_util.update_index(v_ssement, verb_label, 'ARG2')
-        final = op_non_scopal_lbl_shared(part_ssement, nom_ssement, 'ARG2')
+        final = GG.mrs_algebra.op_non_scopal_lbl_shared(part_ssement, nom_ssement, 'ARG2')
     else:
         # [e PROG: bool]
         # TODO: this is kinda ugly lol
@@ -201,7 +202,7 @@ def passive_participle(v_ssement, nom_ssement):
         arg0_var = v_ssement.predications[verb_rel_index].args['ARG0']
         v_ssement.variables[arg0_var]["PROG"] = "bool"
         part_ssement = GG.mrs_util.update_index(v_ssement, verb_label, 'ARG1')
-        final = op_non_scopal_lbl_shared(part_ssement, nom_ssement, 'ARG1')
+        final = GG.mrs_algebra.op_non_scopal_lbl_shared(part_ssement, nom_ssement, 'ARG1')
 
     return final
 
@@ -216,9 +217,9 @@ def possessive(possessor_ssement, possessed_ssement):
     # mark possessed argument as INDEX
     poss_rel = basic('poss', {}, 'ARG1')
     # plug ARG1 with possessor
-    poss_possessed_plugged = op_non_scopal_lbl_shared(poss_rel, possessed_ssement, 'ARG1')
+    poss_possessed_plugged = GG.mrs_algebra.op_non_scopal_lbl_shared(poss_rel, possessed_ssement, 'ARG1')
     # plug ARG2 with possessed
-    poss_possessor_plugged = op_non_scopal_lbl_unshared(poss_possessed_plugged, quant_possessor, 'ARG2')
+    poss_possessor_plugged = GG.mrs_algebra.op_non_scopal_lbl_unshared(poss_possessed_plugged, quant_possessor, 'ARG2')
 
     # final quantify now that both are plugged
     # TODO: I CAN'T DO THIS IN CASE OF FURTHER QUANTIFIERS !!!
@@ -240,15 +241,15 @@ def possessive_old(possessor_ssement, possessed_ssement):
     # mark possessed argument as INDEX
     poss_rel = basic('poss', {}, 'ARG1')
     # plug ARG1 with possessor
-    poss_possessed_plugged = op_non_scopal_lbl_shared(poss_rel, quant_possessed, 'ARG1')
-    poss_possessor_plugged = op_non_scopal_lbl_unshared(poss_possessed_plugged, quant_possessor, 'ARG2')
+    poss_possessed_plugged = GG.mrs_algebra.op_non_scopal_lbl_shared(poss_rel, quant_possessed, 'ARG1')
+    poss_possessor_plugged = GG.mrs_algebra.op_non_scopal_lbl_unshared(poss_possessed_plugged, quant_possessor, 'ARG2')
     return poss_possessor_plugged
 
 
 def prefix(prefix_ssement, head_ssement):
     # append a prefix to a word and then set the holes of the resulting SSEMENT to be the holes of the head_ssement
     # TODO: basically the holes get lost because of the way I implemented the algebra ... I only pass on functor holes
-    prefixed_ssement = op_non_scopal_lbl_shared(prefix_ssement, head_ssement, 'ARG1')
+    prefixed_ssement = GG.mrs_algebra.op_non_scopal_lbl_shared(prefix_ssement, head_ssement, 'ARG1')
     # update holes... kinda cringe but whatever
     prefixed_ssement.holes = head_ssement.holes
     return prefixed_ssement
@@ -262,13 +263,13 @@ def preposition(prep_ssement, head_ssement, nonhead_ssement):
     else:
         quant_nonhead_ssement = nonhead_ssement
 
-    preposition_ARG2 = op_non_scopal_lbl_unshared(prep_ssement, quant_nonhead_ssement, 'ARG2')
-    preposition_ARG1 = op_non_scopal_lbl_shared(preposition_ARG2, head_ssement, 'ARG1')
+    preposition_ARG2 = GG.mrs_algebra.op_non_scopal_lbl_unshared(prep_ssement, quant_nonhead_ssement, 'ARG2')
+    preposition_ARG1 = GG.mrs_algebra.op_non_scopal_lbl_shared(preposition_ARG2, head_ssement, 'ARG1')
     return preposition_ARG1
 
 
 def quantify(quant_ssement, unquant_ssement):
-    return op_scopal(quant_ssement, unquant_ssement)
+    return GG.mrs_algebra.op_scopal(quant_ssement, unquant_ssement)
 
 
 # X is east of Y
@@ -284,24 +285,24 @@ def relative_direction(direction_ssement, figure_ssement, ground_ssement):
     # ground ssement must be quantified
 
     # create base SSEMENTs for direction and place_n
-    place = create_base_SSEMENT('place_n')
+    place = GG.mrs_algebra.create_base_SSEMENT('place_n')
 
     # plug ARG2 of the direction_ssement with ground_ssement (i.e. what figure_ssement is directionally relative to)
-    direction_ARG2_plugged = op_non_scopal_lbl_unshared(direction_ssement, quant_ground_ssement, 'ARG2')
+    direction_ARG2_plugged = GG.mrs_algebra.op_non_scopal_lbl_unshared(direction_ssement, quant_ground_ssement, 'ARG2')
 
     # plug ARG1 of direction_ssement with place_n
-    direction_place = op_non_scopal_lbl_shared(direction_ARG2_plugged, place, 'ARG1')
+    direction_place = GG.mrs_algebra.op_non_scopal_lbl_shared(direction_ARG2_plugged, place, 'ARG1')
 
     # use implicit quantifier for SSEMENT thus far
-    def_imp = create_base_SSEMENT('def_implicit_q')
-    def_imp_direction_place = op_scopal(def_imp, direction_place)
+    def_imp = GG.mrs_algebra.create_base_SSEMENT('def_implicit_q')
+    def_imp_direction_place = GG.mrs_algebra.op_scopal(def_imp, direction_place)
 
     # create loc_nonsp SSEMENT and plug ARG1 with figure_ssement
-    loc_nonsp = create_base_SSEMENT('loc_nonsp', {}, 'ARG1')
-    loc_nonsp_ARG1_plugged = op_non_scopal_lbl_shared(loc_nonsp, figure_ssement, 'ARG1')
+    loc_nonsp = GG.mrs_algebra.create_base_SSEMENT('loc_nonsp', {}, 'ARG1')
+    loc_nonsp_ARG1_plugged = GG.mrs_algebra.op_non_scopal_lbl_shared(loc_nonsp, figure_ssement, 'ARG1')
 
     # plug ARG2 of loc_nonsp with the direction+relative SSEMENT
-    final_dir = op_non_scopal_lbl_unshared(loc_nonsp_ARG1_plugged, def_imp_direction_place, 'ARG2')
+    final_dir = GG.mrs_algebra.op_non_scopal_lbl_unshared(loc_nonsp_ARG1_plugged, def_imp_direction_place, 'ARG2')
 
     return final_dir
 

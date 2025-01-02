@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "POGG"
+authors = [
+    {name = "Elizabeth Conrad", email = "ecconrad@uw.edu"}
+]
+
+description = "POGG package"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "networkx",
+    "pydelphin",
+    "tabulate",
+    "pyyaml"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["GG*"]
+exclude = ["archived*", "examples*", "data_prep*"]
+
+
+
