@@ -1,9 +1,9 @@
 import os
 import yaml
 import networkx as nx
-import GG.graph_to_mrs
-import GG.mrs_util
-import GG.graph_util
+import POGG.graph_to_mrs
+import POGG.mrs_util
+import POGG.graph_util
 from tabulate import tabulate
 
 # Load elements from global config
@@ -17,7 +17,7 @@ data_directory = os.path.join(parent_data_dir, "micrograph")
 local_config_path = os.path.join(data_directory, "local_config.yml")
 local_config = yaml.safe_load((open(local_config_path)))
 graph_directory = local_config['graph_directory']
-lexicon = GG.graph_to_mrs.load_lexicon(local_config['LEXICON'])
+lexicon = POGG.graph_to_mrs.load_lexicon(local_config['LEXICON'])
 
 
 # for each graph...
@@ -32,16 +32,16 @@ for filename in os.listdir(graph_directory):
         print(os.path.join(graph_directory, filename))
         graph = nx.drawing.nx_pydot.read_dot(os.path.join(graph_directory, filename))
 
-        root = GG.graph_util.find_root(graph)
+        root = POGG.graph_util.find_root(graph)
 
-        conversion_results = GG.graph_to_mrs.graph_to_mrs(root, graph, lexicon)
+        conversion_results = POGG.graph_to_mrs.graph_to_mrs(root, graph, lexicon)
         graphmrs = conversion_results[0]
         eval_info = conversion_results[1]
 
-        mrs_string = GG.mrs_util.wrap_ssement(graphmrs)
+        mrs_string = POGG.mrs_util.wrap_ssement(graphmrs)
         print(mrs_string)
 
-        results = GG.mrs_util.generate(mrs_string)
+        results = POGG.mrs_util.generate(mrs_string)
 
         print("GENERATED RESULTS ... ")
         for r in results:

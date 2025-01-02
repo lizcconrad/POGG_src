@@ -1,7 +1,7 @@
 # Contains examples of MRS composition using functions from the composition library
 # ORGANIZED: 01/30/2024
 # DOCUMENTED: 01/04/2023
-from GG import mrs_algebra, composition_library, mrs_util
+from POGG import mrs_algebra, composition_library, mrs_util
 
 
 # "a red apple"

@@ -1,5 +1,5 @@
 # Grammar information
-ERG: /Users/lizcconrad/Documents/PhD/GP2/ERG_2023/erg-2023.dat
-SEMI: /Users/lizcconrad/Documents/PhD/GP2/ERG_2023/trunk/etc/erg.smi
+ERG: /Users/lizcconrad/Documents/PhD/POGG/ERG_2023/erg-2023.dat
+SEMI: /Users/lizcconrad/Documents/PhD/POGG/ERG_2023/trunk/etc/erg.smi
 # Data locations
-parent_data_directory: /Users/lizcconrad/Documents/PhD/GP2/GG_project/GG_data/synthesized
+parent_data_directory: /Users/lizcconrad/Documents/PhD/POGG/POGG_project/POGG_data/synthesized

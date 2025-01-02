@@ -2,14 +2,14 @@ import os
 import yaml
 from delphin import ace, mrs
 from delphin.codecs import simplemrs
-import GG.mrs_util
+import POGG.mrs_util
 from tabulate import tabulate
 
 # Load elements from global config
 global_config = yaml.safe_load((open("../config_data/global_config.yml")))
 grammar_location = global_config['ERG']
 
-error_analysis_path = "/GG_data/development/Heal_TheTrees/results/error_analysis/"
+error_analysis_path = "/POGG_data/development/Heal_TheTrees/results/error_analysis/"
 error_analysis_filename = "uncountble_error.txt"
 
 # type (a possible) desired string to input to ERG for parsing
@@ -33,7 +33,7 @@ with open(os.path.join(error_analysis_path, error_analysis_filename), 'w') as er
     error_analysis_file.write("MRS WITH ERROR:\n{}\n".format(composed_mrs_string))
 
     # attempt generation
-    # results = GG.mrs_util.generate(composed_mrs_string)
+    # results = POGG.mrs_util.generate(composed_mrs_string)
     # error_analysis_file.write("GENERATED RESULTS ... \n")
     # for r in results:
     #     error_analysis_file.write(r.get('surface') + "\n")
@@ -48,7 +48,7 @@ with open(os.path.join(error_analysis_path, error_analysis_filename), 'w') as er
             # find discrepancies between result and broken mrs
             error_analysis_file.write("------------------------------------------------------------------------------\n")
             error_analysis_file.write("TARGET SSEMENT #{}:\n{}\n\n".format(i, simplemrs.encode(target_mrs_obj, indent=True)))
-            GG.mrs_util.find_discrepancy(target_mrs_obj, composed_mrs_obj, error_analysis_file)
+            POGG.mrs_util.find_discrepancy(target_mrs_obj, composed_mrs_obj, error_analysis_file)
             error_analysis_file.write("------------------------------------------------------------------------------\n")
 
 

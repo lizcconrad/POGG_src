@@ -2,10 +2,10 @@ import os
 import sys
 import yaml
 import networkx as nx
-import GG.graph_to_mrs
-import GG.mrs_util
-import GG.graph_util
-import GG.evaluation
+import POGG.graph_to_mrs
+import POGG.mrs_util
+import POGG.graph_util
+import POGG.evaluation
 from tabulate import tabulate
 
 # Load elements from global config
@@ -20,7 +20,7 @@ local_config_path = os.path.join(data_directory, "local_config.yml")
 local_config = yaml.safe_load((open(local_config_path)))
 graph_directory = local_config['graph_directory']
 results_directory = local_config['results_directory']
-lexicon = GG.graph_to_mrs.load_lexicon(local_config['LEXICON'])
+lexicon = POGG.graph_to_mrs.load_lexicon(local_config['LEXICON'])
 
 # make results directory if needed
 if not os.path.exists(results_directory):
@@ -66,9 +66,9 @@ for filename in os.listdir(graph_directory):
             except nx.NetworkXNoCycle:
                 pass
 
-            root = GG.graph_util.find_root(graph)
+            root = POGG.graph_util.find_root(graph)
 
-            conversion_results = GG.graph_to_mrs.graph_to_mrs(root, graph, lexicon)
+            conversion_results = POGG.graph_to_mrs.graph_to_mrs(root, graph, lexicon)
             graphmrs = conversion_results[0]
             eval_info = conversion_results[1]
 
@@ -81,14 +81,14 @@ for filename in os.listdir(graph_directory):
                 new_edge_name = "{}_{}".format(graph_name, e)
                 full_eval_info['edges'][new_edge_name] = eval_info['edges'][e]
 
-            mrs_string = GG.mrs_util.wrap_ssement(graphmrs)
+            mrs_string = POGG.mrs_util.wrap_ssement(graphmrs)
             results_file.write(mrs_string + "\n")
 
             results = []
             if mrs_string == "":
                 generation_info[graph_name] = [0, "MRS not produced"]
             else:
-                results = GG.mrs_util.generate(mrs_string)
+                results = POGG.mrs_util.generate(mrs_string)
 
                 results_file.write("GENERATED RESULTS ... \n")
                 for r in results:
@@ -102,11 +102,11 @@ for filename in os.listdir(graph_directory):
             results_file.write("\nTOTAL RESULTS: {}".format(len(results)))
 
             results_file.write("\n\n")
-            results_file.write(GG.evaluation.node_evaluation(eval_info['nodes']))
+            results_file.write(POGG.evaluation.node_evaluation(eval_info['nodes']))
             results_file.write("\n\n")
-            results_file.write(GG.evaluation.edge_evaluation(eval_info['edges']))
+            results_file.write(POGG.evaluation.edge_evaluation(eval_info['edges']))
             results_file.write("\n\n")
-            results_file.write(GG.evaluation.evaluation_summary(eval_info))
+            results_file.write(POGG.evaluation.evaluation_summary(eval_info))
 
 
 with open(os.path.join(results_directory,"evaluation_summary.txt"), 'w') as summary_file:
@@ -130,12 +130,12 @@ with open(os.path.join(results_directory,"evaluation_summary.txt"), 'w') as summ
     summary_file.write("\n\n")
 
     # total node/edge coverage
-    summary_table = GG.evaluation.evaluation_summary(full_eval_info)
-    summary_file.write(GG.evaluation.evaluation_summary(full_eval_info))
+    summary_table = POGG.evaluation.evaluation_summary(full_eval_info)
+    summary_file.write(POGG.evaluation.evaluation_summary(full_eval_info))
 
     # node/edge information
     summary_file.write("\n\n")
-    summary_file.write(GG.evaluation.node_evaluation(full_eval_info['nodes']))
+    summary_file.write(POGG.evaluation.node_evaluation(full_eval_info['nodes']))
     summary_file.write("\n\n")
-    summary_file.write(GG.evaluation.edge_evaluation(full_eval_info['edges']))
+    summary_file.write(POGG.evaluation.edge_evaluation(full_eval_info['edges']))
 

@@ -2,7 +2,7 @@
 # ORGANIZED: 01/30/2024
 # DOCUMENTED: 01/30/2024
 import networkx as nx
-from GG.data_regularization import regularize_node, regularize_edge
+from POGG.data_regularization import regularize_node, regularize_edge
 
 
 def build_lexicon_skeleton(graph):

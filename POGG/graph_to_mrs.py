@@ -4,8 +4,8 @@
 import json
 import re
 import random
-import GG.composition_library
-import GG.data_regularization
+import POGG.composition_library
+import POGG.data_regularization
 
 # TODO: graph selection? based on complexity? offload to graph_util.py perhaps
 
@@ -42,22 +42,22 @@ def guess_pos_and_create_ssement(pred_label, variables={}):
     """
     # noun
     if re.match('_[A-z]+_n_[0-z]+$', pred_label):
-        return GG.composition_library.noun_ssement(pred_label, variables)
+        return POGG.composition_library.noun_ssement(pred_label, variables)
     # adjective
     elif re.match('_[A-z\-]+_a_[0-z]+$', pred_label):
-        return GG.composition_library.adjective_ssement(pred_label, variables)
+        return POGG.composition_library.adjective_ssement(pred_label, variables)
     # verb
     elif re.match('_[A-z]+_v_[0-z]$', pred_label):
-        return GG.composition_library.verb_ssement(pred_label, variables)
+        return POGG.composition_library.verb_ssement(pred_label, variables)
     # quantifier
     elif re.match('_[A-z]+_q$', pred_label):
-        return GG.composition_library.quant_ssement(pred_label, variables)
+        return POGG.composition_library.quant_ssement(pred_label, variables)
     # preposition
     elif re.match('_[A-z]+_p(_loc)*$', pred_label):
-        return GG.composition_library.preposition_ssement(pred_label, variables)
+        return POGG.composition_library.preposition_ssement(pred_label, variables)
     # if no guess, do basic_ssement, assuming ARG0 as INDEX
     else:
-        return GG.composition_library.basic(pred_label, variables)
+        return POGG.composition_library.basic(pred_label, variables)
 
 
 def parent_hole_composition(parent, child, edge_rule):
@@ -74,7 +74,7 @@ def parent_hole_composition(parent, child, edge_rule):
     :rtype: SSEMENT
     """
     # get the composition rule from the lexicon via the edge name
-    comp_rule = getattr(GG.composition_library, edge_rule)
+    comp_rule = getattr(POGG.composition_library, edge_rule)
     # when the child is the plug, the parent is the functor, so it goes first
     # e.g. adjective(adj, nom)
     return comp_rule(parent, child)
@@ -94,7 +94,7 @@ def parent_plug_composition(parent, child, edge_rule):
     :rtype: SSEMENT
     """
     # get the composition rule from the lexicon via the edge name
-    comp_rule = getattr(GG.composition_library, edge_rule)
+    comp_rule = getattr(POGG.composition_library, edge_rule)
     # when the parent is the plug, the child is the functor, so it goes first
     # e.g. adjective(adj, nom)
     return comp_rule(child, parent)
@@ -119,22 +119,22 @@ def edge_predicate(parent, child, edge_json):
     # so the edge_pred being introduced is whatever the value of that second property is
     # and the composition rule is the value of the "composition" property
     comp_rule_name = edge_json["composition"]
-    comp_rule = getattr(GG.composition_library, comp_rule_name)
+    comp_rule = getattr(POGG.composition_library, comp_rule_name)
     # edge pred information
     edge_pred = edge_json["property_predicate"]["predicate_label"]
     edge_ssement_type = edge_json["property_predicate"]["predicate_type"]
-    edge_ssement_rule = getattr(GG.composition_library, edge_ssement_type)
+    edge_ssement_rule = getattr(POGG.composition_library, edge_ssement_type)
     edge_ssement = edge_ssement_rule(edge_pred)
     return comp_rule(edge_ssement, parent, child)
 
 
 def head_first_node(head, nonhead, comp_name):
-    comp_rule = getattr(GG.composition_library, comp_name)
+    comp_rule = getattr(POGG.composition_library, comp_name)
     return comp_rule(head, nonhead)
 
 
 def head_second_node(head, nonhead, comp_name):
-    comp_rule = getattr(GG.composition_library, comp_name)
+    comp_rule = getattr(POGG.composition_library, comp_name)
     return comp_rule(nonhead, head)
 
 
@@ -190,11 +190,11 @@ def node_to_mrs_old(node, lexicon, variables={}):
             nonhead = node_to_mrs(nonhead_json, lexicon, variables)
 
         if node_json['composition'] == 'compound':
-            return GG.composition_library.compound(head, nonhead)
+            return POGG.composition_library.compound(head, nonhead)
         elif node_json['composition'] == 'adjective':
-            return GG.composition_library.adjective(nonhead, head)
+            return POGG.composition_library.adjective(nonhead, head)
         elif node_json['composition'] == 'possessive':
-            return GG.composition_library.possessive(nonhead, head)
+            return POGG.composition_library.possessive(nonhead, head)
         # TODO: this is here but it's not going to be used for GP2 because it's too hard to evaluate
         #  as in ... i need to get every possible synonym to express the variety for one node
         #  but as it stands now I return one (1) MRS per graph
@@ -366,7 +366,7 @@ def graph_to_mrs(root, graph, lexicon, node_count=0, edge_count=0):
         }
     '''
 
-    regularized_root = GG.data_regularization.regularize_node(root)
+    regularized_root = POGG.data_regularization.regularize_node(root)
     # the node/edge names have to be stored in eval with a counter
     node_count += 1
     # this is because two separate nodes/edges with the same key should be counted as separate instances
@@ -410,7 +410,7 @@ def graph_to_mrs(root, graph, lexicon, node_count=0, edge_count=0):
         # 4. compose child_mrs with the root
         edge = graph.get_edge_data(root, child)
         edge_count += 1
-        regularized_edge = GG.data_regularization.regularize_edge(edge[0]['label'])
+        regularized_edge = POGG.data_regularization.regularize_edge(edge[0]['label'])
 
         eval_edge_name = "{}_{}".format(regularized_edge, edge_count)
         eval_info['edges'][eval_edge_name] = {

@@ -21,7 +21,7 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["GG*"]
+include = ["POGG*"]
 exclude = ["archived*", "examples*", "data_prep*"]
 
 

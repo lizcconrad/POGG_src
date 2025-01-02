@@ -4,7 +4,7 @@
 import yaml
 from delphin import ace, mrs
 from delphin.codecs import simplemrs
-import GG.mrs_algebra
+import POGG.mrs_algebra
 import copy
 from tabulate import tabulate
 import re
@@ -453,8 +453,8 @@ def wrap_with_quantifier(unquant_ssement):
     :rtype: SSEMENT
     """
     # just using 'the' for now
-    quant = GG.mrs_algebra.create_base_SSEMENT('def_udef_a_q')
-    return GG.mrs_algebra.op_scopal(quant, unquant_ssement)
+    quant = POGG.mrs_algebra.create_base_SSEMENT('def_udef_a_q')
+    return POGG.mrs_algebra.op_scopal(quant, unquant_ssement)
 
 
 def update_index(ssement, index_rel, index_arg):
@@ -616,7 +616,7 @@ def overwrite_eqs(final_ssement):
                     new_r_args[arg] = chosen_var
                 else:
                     new_r_args[arg] = r.args[arg]
-            new_seps.append(GG.mrs_algebra.SEP(r.predicate, new_r_label, new_r_args))
+            new_seps.append(POGG.mrs_algebra.SEP(r.predicate, new_r_label, new_r_args))
 
 
         # update the SEP list with the current ones
@@ -656,7 +656,7 @@ def overwrite_eqs(final_ssement):
 
     # build new overwritten SSEMENT
     # eqs list is gone
-    return GG.mrs_algebra.SSEMENT(newest_top, newest_ltop, newest_index, current_seps, current_variables, current_ssement.holes, None, new_hcons)
+    return POGG.mrs_algebra.SSEMENT(newest_top, newest_ltop, newest_index, current_seps, current_variables, current_ssement.holes, None, new_hcons)
 
 
 def wrap_and_generate_to_console(final_ssement):
@@ -672,8 +672,8 @@ def wrap_and_generate_to_console(final_ssement):
         quant_final_ssement = wrap_with_quantifier(final_ssement)
 
     # wrap with 'unknown' and overwrite EQs
-    unknown = GG.mrs_algebra.create_base_SSEMENT('unknown')
-    wrapped_ssement = GG.mrs_algebra.op_final(unknown, quant_final_ssement, GG.mrs_algebra.VAR_LABELER.get_var_name('h'))
+    unknown = POGG.mrs_algebra.create_base_SSEMENT('unknown')
+    wrapped_ssement = POGG.mrs_algebra.op_final(unknown, quant_final_ssement, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
     generate_from = overwrite_eqs(wrapped_ssement)
 
     generate_mrs_string = simplemrs.encode(generate_from, indent=True)
@@ -701,8 +701,8 @@ def wrap_and_generate_to_file(final_ssement, filename):
         quant_final_ssement = wrap_with_quantifier(final_ssement)
 
     # wrap with 'unknown' and overwrite EQs
-    unknown = GG.mrs_algebra.create_base_SSEMENT('unknown')
-    wrapped_ssement = GG.mrs_algebra.op_final(unknown, quant_final_ssement, GG.mrs_algebra.VAR_LABELER.get_var_name('h'))
+    unknown = POGG.mrs_algebra.create_base_SSEMENT('unknown')
+    wrapped_ssement = POGG.mrs_algebra.op_final(unknown, quant_final_ssement, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
     generate_from = overwrite_eqs(wrapped_ssement)
 
     generate_mrs_string = simplemrs.encode(generate_from, indent=True)
@@ -737,8 +737,8 @@ def wrap_ssement(final_ssement):
         quant_final_ssement = wrap_with_quantifier(final_ssement)
 
     # wrap with 'unknown' and overwrite EQs
-    unknown = GG.mrs_algebra.create_base_SSEMENT('unknown')
-    wrapped_ssement = GG.mrs_algebra.op_final(unknown, quant_final_ssement, GG.mrs_algebra.VAR_LABELER.get_var_name('h'))
+    unknown = POGG.mrs_algebra.create_base_SSEMENT('unknown')
+    wrapped_ssement = POGG.mrs_algebra.op_final(unknown, quant_final_ssement, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
     generate_from = overwrite_eqs(wrapped_ssement)
 
     generate_mrs_string = simplemrs.encode(generate_from, indent=True)

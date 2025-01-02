@@ -16,7 +16,7 @@ from delphin.codecs import simplemrs
 #
 #
 # # go back to current working directory
-# os.chdir("/Users/lizcconrad/Documents/PhD/GP2/GG_project/")
+# os.chdir("/Users/lizcconrad/Documents/PhD/POGG/POGG_project/")
 #
 # # build graph with all entities
 # graph = build_graph(result)

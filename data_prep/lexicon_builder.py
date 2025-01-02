@@ -4,7 +4,7 @@
 import json
 import os
 from swiplserver import PrologMQI
-from GG.graph_util import build_graph, select_subgraphs, write_graph_to_dot, write_graph_to_png, write_graph_to_svg
+from POGG.graph_util import build_graph, select_subgraphs, write_graph_to_dot, write_graph_to_png, write_graph_to_svg
 from lexicon_helper import build_lexicon_skeleton
 
 # set working directory to the directory with the Perplexity data
@@ -21,7 +21,7 @@ with PrologMQI() as mqi:
 
 
 # go back to current working directory
-os.chdir("/Users/lizcconrad/Documents/PhD/GP2/GG_project/GG_data/test/")
+os.chdir("//test/")
 
 # directory for current game
 game_dir_name = "Scenario"

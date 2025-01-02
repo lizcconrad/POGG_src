@@ -1,7 +1,7 @@
 import yaml
 from delphin import ace, mrs
 from delphin.codecs import simplemrs
-# import GG.mrs_util
+# import POGG.mrs_util
 import pprint
 
 # Load elements from global config
@@ -59,7 +59,7 @@ with ace.ACEParser(grammar_location) as parser, ace.ACEGenerator(grammar_locatio
 # erg_mrs_obj = simplemrs.decode(result_1)
 #
 #
-# var_dicts = GG.mrs_util.find_discrepancy(erg_mrs_obj, my_mrs_obj)
+# var_dicts = POGG.mrs_util.find_discrepancy(erg_mrs_obj, my_mrs_obj)
 # pp = pprint.PrettyPrinter(depth=4)
 # # pp.pprint(var_dicts[0][0])
 # # pp.pprint(var_dicts[0][1])
@@ -131,7 +131,7 @@ with ace.ACEParser(grammar_location) as parser, ace.ACEGenerator(grammar_locatio
 #         # test isomorphic
 #         mrs.is_isomorphic(mrs_obj, my_mrs_obj, properties=False)
 #
-#         var_dicts = GG.mrs_util.find_discrepancy(my_mrs_obj, mrs_obj)
+#         var_dicts = POGG.mrs_util.find_discrepancy(my_mrs_obj, mrs_obj)
 #         pp = pprint.PrettyPrinter(depth=4)
 #         # pp.pprint(var_dicts[0])
 #         # pp.pprint(var_dicts[1])
