@@ -257,3 +257,16 @@ def find_root(graph):
     return None
 
 
+def get_subgraphs(graph, depth):
+    """
+    Get all subgraphs of a particular depth.
+
+    :param graph: Full graph
+    :type graph: DiGraph
+    :param depth: depth of subgraphs to return
+    :type depth: int
+    :return: List of subgraphs with specified depth
+    :rtype: list[DiGraph]
+    """
+
+    return sorted(map(sorted, nx.k_edge_subgraphs(graph, k=depth)))

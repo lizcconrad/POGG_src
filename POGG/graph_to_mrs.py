@@ -138,71 +138,6 @@ def head_second_node(head, nonhead, comp_name):
     return comp_rule(nonhead, head)
 
 
-# get the MRS for an individual node
-def node_to_mrs_old(node, lexicon, variables={}):
-    """
-    Create MRS for individual node
-    :param node: node text
-    :type node: str
-    :param lexicon: lexicon with node to ERG predicate label mappings
-    :type lexicon: dict
-    :param variables: dict of variables and values, if you need to constrain them (e.g. NUM=sg)
-    :type variables: dict
-    :return: SSEMENT for the node
-    :rtype: SSEMENT
-    """
-    # get ERG predicate
-    # might involve compounds or synonyms
-
-    # see if it's a node that's categorized as an entityType
-    # TODO: bro this is sooooo bad oh my god, FIX LATER FR
-    # ... it's possibly a recursive call, in which case node is already a dict ...
-    if isinstance(node, dict):
-        node_json = node
-    else:
-        try:
-            node_json = lexicon['entityTypes'][node]
-        except KeyError:
-            # see if it's a propertyValue
-            try:
-                node_json = lexicon['propertyValues'][node]
-            except KeyError:
-                raise KeyError("Can't find '{}' as a key in the lexicon".format(node))
-
-    # if it's just a string, return the ssement for the pred label
-    if node_json == "":
-        raise ValueError("'{}' has no value in the lexicon".format(node))
-    elif isinstance(node_json, str):
-        return guess_pos_and_create_ssement(node_json, variables)
-    else:
-        # TODO: too many cases here this could probably be neater ... ?
-        # TODO: make a similar function like the edge ones that finds the right node fxn...
-        head_json = node_json['predicates']['head']
-        nonhead_json = node_json['predicates']['modifier']
-        if isinstance(head_json, str):
-            head = guess_pos_and_create_ssement(head_json, variables)
-        else:
-            head = node_to_mrs(node_json['predicates']['head'], lexicon, variables)
-
-        if isinstance(nonhead_json, str):
-            nonhead = guess_pos_and_create_ssement(nonhead_json, variables)
-        else:
-            nonhead = node_to_mrs(nonhead_json, lexicon, variables)
-
-        if node_json['composition'] == 'compound':
-            return POGG.composition_library.compound(head, nonhead)
-        elif node_json['composition'] == 'adjective':
-            return POGG.composition_library.adjective(nonhead, head)
-        elif node_json['composition'] == 'possessive':
-            return POGG.composition_library.possessive(nonhead, head)
-        # TODO: this is here but it's not going to be used for GP2 because it's too hard to evaluate
-        #  as in ... i need to get every possible synonym to express the variety for one node
-        #  but as it stands now I return one (1) MRS per graph
-        elif node_json['composition'] == 'synonyms':
-            syn_choice = random.choice(node_json['predicates'])
-            return guess_pos_and_create_ssement(syn_choice, variables)
-
-
 def node_to_mrs(node, lexicon, variables={}):
     """
         Create MRS for individual node
@@ -452,3 +387,45 @@ def graph_to_mrs(root, graph, lexicon, node_count=0, edge_count=0):
     # i.e. the MRS up to this point, evaluation information, and the count of included nodes/edges in the MRS
     # add the root_increment here, so it's only accounted for once
     return new_composed_mrs, eval_info, node_count, edge_count
+
+# def graph_to_mrs_new(root, graph, lexicon):
+#     """
+#     Convert a graph to MRS (SSEMENT)
+#     :param root: text on root node
+#     :type root: str
+#     :param graph: graph to compose MRS from
+#     :type graph: DiGraph
+#     :param lexicon: lexicon with node to ERG predicate label mappings
+#     :type lexicon: dict
+#     :param node_count: counter for naming nodes in the evaluation dictionary
+#     :type node_count: int
+#     :param edge_count: counter for naming edges in the evaluation dictionary
+#     :type edge_count: int
+#     :param variables: dict of variables and values, if you need to constrain them (e.g. NUM=sg)
+#     :type variables: dict
+#     :return: tuple of composed SSEMENT and eval information
+#     :rtype: tuple
+#     """
+#     regularized_root = POGG.data_regularization.regularize_node(root)
+#
+#     # 1. get MRS for root
+#     root_mrs = node_to_mrs(regularized_root, lexicon, {})
+#
+#     # 2. for each child ...
+#     new_composed_mrs = root_mrs
+#     for child in graph.successors(root):
+#         # if the root node or any child edge can't be produced, all children must be marked as disincluded
+#         inclusion_failure = False
+#         # 3. recurse and get the full MRS for the child
+#         child_mrs = graph_to_mrs_new(child, graph, lexicon)
+#
+#         # 4. compose child_mrs with the root
+#         edge = graph.get_edge_data(root, child)
+#         regularized_edge = POGG.data_regularization.regularize_edge(edge[0]['label'])
+#         new_composed_mrs = edge_to_mrs(new_composed_mrs, child_mrs, regularized_edge, lexicon)
+#
+#
+#     # 5. return the result
+#     # i.e. the MRS up to this point, evaluation information, and the count of included nodes/edges in the MRS
+#     # add the root_increment here, so it's only accounted for once
+#     return new_composed_mrs
