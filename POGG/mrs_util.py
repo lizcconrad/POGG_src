@@ -19,11 +19,11 @@ def _make_rels_list(s):
 
 def _make_var_dicts(s):
     """
-    Create two dictionaries for a given SSEMENT. One where the top level keys are the variables,
+    Create two dictionaries for a given SEMENT. One where the top level keys are the variables,
     and another where the top level keys are the predicate labels. These will be used to find discrepancies between
-    non-isomorphic SSEMENTs
-    :param s: Given SSEMENT
-    :type s: SSEMENT
+    non-isomorphic SEMENTs
+    :param s: Given SEMENT
+    :type s: SEMENT
     :return: two dictionaries with structure shown below
     :rtype: dict, dict
     """
@@ -150,7 +150,7 @@ def _check_var_equivalencies(s1_dicts, s2_dicts):
         actual_equivalencies = list()
         actual_regularized_equivalencies = list()
 
-        # dict of every variable the created (or other) SSEMENT has for the target ARGs
+        # dict of every variable the created (or other) SEMENT has for the target ARGs
         # ideally should end up with one key only, but if not, there's a missing equivalency
         # PARALLEL LISTS...
 
@@ -176,7 +176,7 @@ def _check_var_equivalencies(s1_dicts, s2_dicts):
                     actual_equivalencies = list()
                     actual_regularized_equivalencies = list()
 
-                    # dict of every variable the created (or other) SSEMENT has for the target ARGs
+                    # dict of every variable the created (or other) SEMENT has for the target ARGs
                     # ideally should end up with one key only, but if not, there's a missing equivalency
                     # PARALLEL LISTS...
 
@@ -235,13 +235,13 @@ def _check_var_equivalencies(s1_dicts, s2_dicts):
         #     if target_equivalencies == actual_equivalencies[key]:
         #         continue
         #     else:
-        #         print("Composed SSEMENT has additional equivalencies...")
-        #         print("Target SSEMENT equivalencies:{}".format(sorted(list(target_equivalencies))))
-        #         print("Composed SSEMENT equivalencies:{}\n".format(sorted(list(actual_equivalencies[key]))))
+        #         print("Composed SEMENT has additional equivalencies...")
+        #         print("Target SEMENT equivalencies:{}".format(sorted(list(target_equivalencies))))
+        #         print("Composed SEMENT equivalencies:{}\n".format(sorted(list(actual_equivalencies[key]))))
         # else:
-        #     print("Composed SSEMENT doesn't contain appropriate equivalencies...")
-        #     print("Target SSEMENT equivalencies:{}".format(sorted(list(target_equivalencies))))
-        #     print("Composed SSEMENT variables:{}\n".format(actual_equivalencies))
+        #     print("Composed SEMENT doesn't contain appropriate equivalencies...")
+        #     print("Target SEMENT equivalencies:{}".format(sorted(list(target_equivalencies))))
+        #     print("Composed SEMENT variables:{}\n".format(actual_equivalencies))
 
 
 def _make_hcon_list(s, s_var_dict, s_pred_arg_dict):
@@ -293,13 +293,13 @@ def _make_hcon_list(s, s_var_dict, s_pred_arg_dict):
 def find_discrepancy(s1, s2, file):
     # check if isomorphic
     if mrs.is_isomorphic(s1, s2, properties=False):
-        file.write("SSEMENTs are isomorphic!\n")
+        file.write("SEMENTs are isomorphic!\n")
         return False
 
     # s1_string = simplemrs.encode(s1, indent=True)
     # s2_string = simplemrs.encode(s2, indent=True)
-    # file.write("TARGET SSEMENT:\n{}\n\n".format(s1_string))
-    # file.write("COMPOSED SSEMENT:\n{}\n\n".format(s2_string))
+    # file.write("TARGET SEMENT:\n{}\n\n".format(s1_string))
+    # file.write("COMPOSED SEMENT:\n{}\n\n".format(s2_string))
 
     # check for same RELS ...
     s1_rels = _make_rels_list(s1)
@@ -330,7 +330,7 @@ def find_discrepancy(s1, s2, file):
                     pass
 
         if len(s2_mutable_rels) > 0 or len(s1_mutable_rels) > 0:
-            file.write("SSEMENTs don't contain the same RELs\n")
+            file.write("SEMENTs don't contain the same RELs\n")
             file.write("Extra Target RELs: {}\n\n".format(s1_mutable_rels))
             file.write("Extra Composed RELs: {}\n\n".format(s2_mutable_rels))
             return True
@@ -361,7 +361,7 @@ def find_discrepancy(s1, s2, file):
             s2_mutable_reg_equivs.pop(s2_ind)
 
     # print equivalencies not found in both
-    file.write("Equivalencies in TARGET SSEMENT not found in COMPOSED SSEMENT:\n")
+    file.write("Equivalencies in TARGET SEMENT not found in COMPOSED SEMENT:\n")
     for i, equiv in enumerate(s1_mutable_full_equivs):
         equiv_table = []
         for j, equiv_elem in enumerate(equiv):
@@ -370,7 +370,7 @@ def find_discrepancy(s1, s2, file):
             equiv_table.append([reg_equiv_elem, equiv_elem])
         file.write("{}\n\n".format(tabulate(equiv_table, headers=["REGULARIZED", "FULL"])))
 
-    file.write("\nEquivalencies in COMPOSED SSEMENT not found in TARGET SSEMENT:\n")
+    file.write("\nEquivalencies in COMPOSED SEMENT not found in TARGET SEMENT:\n")
     for i, equiv in enumerate(s2_mutable_full_equivs):
         equiv_table = []
         for j, equiv_elem in enumerate(equiv):
@@ -381,7 +381,7 @@ def find_discrepancy(s1, s2, file):
 
 
     # check qeq equivalencies...
-    # pass in SSEMENT to access HCONS and the var_dict to convert the qeqs to readable format
+    # pass in SEMENT to access HCONS and the var_dict to convert the qeqs to readable format
     s1_full_hcons, s1_reg_hcons = _make_hcon_list(s1, s1_dicts[0], s1_dicts[1])
     s2_full_hcons, s2_reg_hcons = _make_hcon_list(s2, s2_dicts[0], s2_dicts[1])
 
@@ -402,14 +402,14 @@ def find_discrepancy(s1, s2, file):
             s2_mutable_reg_hcons.pop(s2_ind)
 
     # print equivalencies not found in both
-    file.write("\n\nHCONs in TARGET SSEMENT not found in COMPOSED SSEMENT:\n")
+    file.write("\n\nHCONs in TARGET SEMENT not found in COMPOSED SEMENT:\n")
     for i in range(len(s1_mutable_full_hcons)):
         file.write("\tREGULARIZED: {} ={}= {}\n".format(s1_mutable_reg_hcons[i][0], s1_mutable_reg_hcons[i][1],
                                                  s1_mutable_reg_hcons[i][2]))
         file.write("\tFULL: {} ={}= {}\n\n".format(s1_mutable_full_hcons[i][0], s1_mutable_full_hcons[i][1],
                                           s1_mutable_full_hcons[i][2]))
 
-    file.write("\nHCONs in COMPOSED SSEMENT not found in TARGET SSEMENT:\n")
+    file.write("\nHCONs in COMPOSED SEMENT not found in TARGET SEMENT:\n")
     for i in range(len(s2_mutable_full_hcons)):
         file.write("\tREGULARIZED: {} ={}= {}\n".format(s2_mutable_reg_hcons[i][0], s2_mutable_reg_hcons[i][1],
                                                  s2_mutable_reg_hcons[i][2]))
@@ -419,66 +419,66 @@ def find_discrepancy(s1, s2, file):
     return True
 
 
-def check_if_quantified(check_ssement):
+def check_if_quantified(check_SEMENT):
     """
-    Check if the given SSEMENT is quantified (assumes generation is occurring on referring expressions)
-    :param check_ssement: SSEMENT to be checked
-    :type check_ssement: SSEMENT
-    :return: quantified SSEMENT (may be unchanged from given)
-    :rtype: SSEMENT
+    Check if the given SEMENT is quantified (assumes generation is occurring on referring expressions)
+    :param check_SEMENT: SEMENT to be checked
+    :type check_SEMENT: SEMENT
+    :return: quantified SEMENT (may be unchanged from given)
+    :rtype: SEMENT
     """
     # if the INDEX (or something eq to INDEX) is not the ARG0 of something with RSTR, gg
-    index = check_ssement.index
+    index = check_SEMENT.index
     index_set = set()
     index_set.add(index)
     # go through eqs to find variables eq to index
-    if check_ssement.eqs is not None:
-        for eq in check_ssement.eqs:
+    if check_SEMENT.eqs is not None:
+        for eq in check_SEMENT.eqs:
             if index in eq:
                 for elem in eq:
                     index_set.add(elem)
 
-    for rel in check_ssement.rels:
+    for rel in check_SEMENT.rels:
         if rel.args['ARG0'] in index_set and 'RSTR' in rel.args:
             return True
     return False
 
 
-def wrap_with_quantifier(unquant_ssement):
+def wrap_with_quantifier(unquant_SEMENT):
     """
-    Wrap the given SSEMENT in a quantifier
-    :param unquant_ssement: unquantified SSEMENT
-    :type unquant_ssement: SSEMENT
-    :return: quantified SSEMENT
-    :rtype: SSEMENT
+    Wrap the given SEMENT in a quantifier
+    :param unquant_SEMENT: unquantified SEMENT
+    :type unquant_SEMENT: SEMENT
+    :return: quantified SEMENT
+    :rtype: SEMENT
     """
     # just using 'the' for now
-    quant = POGG.mrs_algebra.create_base_SSEMENT('def_udef_a_q')
-    return POGG.mrs_algebra.op_scopal(quant, unquant_ssement)
+    quant = POGG.mrs_algebra.create_base_SEMENT('def_udef_a_q')
+    return POGG.mrs_algebra.op_scopal(quant, unquant_SEMENT)
 
 
-def update_index(ssement, index_rel, index_arg):
+def update_index(SEMENT, index_rel, index_arg):
     """
-    Given a SSEMENT, the relation that has the ARG that serves as the index,
-    and the index ARG, update the SSEMENT's index
+    Given a SEMENT, the relation that has the ARG that serves as the index,
+    and the index ARG, update the SEMENT's index
 
-    Example: a verbal SSEMENT whose index is the ARG0 of the verb relation may need to be updated so the ARG2 of
+    Example: a verbal SEMENT whose index is the ARG0 of the verb relation may need to be updated so the ARG2 of
     the verb is the INDEX in the case of a passive participle modifier
-    :param ssement: SSEMENT to update
-    :type ssement: SSEMENT
+    :param SEMENT: SEMENT to update
+    :type SEMENT: SEMENT
     :param index_rel: predicate label for the relation which contains the new index
     :type index_rel: str
     :param index_arg: ARG that serves as index
     :type index_arg: str
-    :return: updated SSEMENT
-    :rtype: SSEMENT
+    :return: updated SEMENT
+    :rtype: SEMENT
     """
-    for r in ssement.rels:
+    for r in SEMENT.rels:
         if r.predicate == index_rel:
             new_index = r.args[index_arg]
 
-    ssement.index = new_index
-    return ssement
+    SEMENT.index = new_index
+    return SEMENT
 
 
 def group_equalities(eqs):
@@ -565,43 +565,43 @@ def get_most_specified_variable(eq_vars):
     return most_spec_var
 
 
-def overwrite_eqs(final_ssement):
+def overwrite_eqs(final_SEMENT):
     """
-    Create a new SSEMENT where the EQs have been overwritten to one representative value
-    :param final_ssement: final SSEMENT from composition
-    :type final_ssement: SSEMENT
-    :return: new SSEMENT with overwritten EQs
-    :rtype: SSEMENT
+    Create a new SEMENT where the EQs have been overwritten to one representative value
+    :param final_SEMENT: final SEMENT from composition
+    :type final_SEMENT: SEMENT
+    :return: new SEMENT with overwritten EQs
+    :rtype: SEMENT
     """
 
-    # will be progressively collecting a new list of SEPs, HCONS, and EQs, so start with those from the final_ssement
-    # where final_ssement is the SSEMENT that comes out after composition is complete
-    current_ssement = final_ssement
-    current_seps = current_ssement.rels
-    current_variables = current_ssement.variables
-    current_hcons = current_ssement.hcons
+    # will be progressively collecting a new list of SEPs, HCONS, and EQs, so start with those from the final_SEMENT
+    # where final_SEMENT is the SEMENT that comes out after composition is complete
+    current_SEMENT = final_SEMENT
+    current_seps = current_SEMENT.rels
+    current_variables = current_SEMENT.variables
+    current_hcons = current_SEMENT.hcons
     # group the equalities so if x1=x2 and x2=x3 there's a list of [x1, x2, x3] with all variables that are equivalent
-    grouped_eqs = group_equalities(current_ssement.eqs)
+    grouped_eqs = group_equalities(current_SEMENT.eqs)
 
     for eq in grouped_eqs:
         # need to get the more specific variable of the pair
         chosen_var = get_most_specified_variable(list(eq))
 
         # check the top
-        if current_ssement.top in eq:
+        if current_SEMENT.top in eq:
             newest_top = chosen_var
         else:
-            newest_top = current_ssement.top
+            newest_top = current_SEMENT.top
         # check the ltop
-        if current_ssement.ltop in eq:
+        if current_SEMENT.ltop in eq:
             newest_ltop = chosen_var
         else:
-            newest_ltop = current_ssement.ltop
+            newest_ltop = current_SEMENT.ltop
         # check the index
-        if current_ssement.index in eq:
+        if current_SEMENT.index in eq:
             newest_index = chosen_var
         else:
-            newest_index = current_ssement.index
+            newest_index = current_SEMENT.index
 
         # check the rels
         new_seps = []
@@ -654,27 +654,27 @@ def overwrite_eqs(final_ssement):
 
         # check the icons...???
 
-    # build new overwritten SSEMENT
+    # build new overwritten SEMENT
     # eqs list is gone
-    return POGG.mrs_algebra.SSEMENT(newest_top, newest_ltop, newest_index, current_seps, current_variables, current_ssement.holes, None, new_hcons)
+    return POGG.mrs_algebra.SEMENT(newest_top, newest_ltop, newest_index, current_seps, current_variables, current_SEMENT.holes, None, new_hcons)
 
 
-def wrap_and_generate_to_console(final_ssement):
+def wrap_and_generate_to_console(final_SEMENT):
     """
     Wraps a refex with the "unknown" predicate, which the ERG requires for generation, then performs the generation
-    :param final_ssement: SSEMENT to wrap
-    :type final_ssement: SSEMENT
+    :param final_SEMENT: SEMENT to wrap
+    :type final_SEMENT: SEMENT
     """
     # quantify if not already quantified
-    if check_if_quantified(final_ssement):
-        quant_final_ssement = final_ssement
+    if check_if_quantified(final_SEMENT):
+        quant_final_SEMENT = final_SEMENT
     else:
-        quant_final_ssement = wrap_with_quantifier(final_ssement)
+        quant_final_SEMENT = wrap_with_quantifier(final_SEMENT)
 
     # wrap with 'unknown' and overwrite EQs
-    unknown = POGG.mrs_algebra.create_base_SSEMENT('unknown')
-    wrapped_ssement = POGG.mrs_algebra.op_final(unknown, quant_final_ssement, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
-    generate_from = overwrite_eqs(wrapped_ssement)
+    unknown = POGG.mrs_algebra.create_base_SEMENT('unknown')
+    wrapped_SEMENT = POGG.mrs_algebra.op_final(unknown, quant_final_SEMENT, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
+    generate_from = overwrite_eqs(wrapped_SEMENT)
 
     generate_mrs_string = simplemrs.encode(generate_from, indent=True)
 
@@ -688,22 +688,22 @@ def wrap_and_generate_to_console(final_ssement):
             print(r.get('surface'))
 
 
-def wrap_and_generate_to_file(final_ssement, filename):
+def wrap_and_generate_to_file(final_SEMENT, filename):
     """
     Wraps a refex with the "unknown" predicate, which the ERG requires for generation, then performs the generation
-    :param final_ssement: SSEMENT to wrap
-    :type final_ssement: SSEMENT
+    :param final_SEMENT: SEMENT to wrap
+    :type final_SEMENT: SEMENT
     """
     # quantify if not already quantified
-    if check_if_quantified(final_ssement):
-        quant_final_ssement = final_ssement
+    if check_if_quantified(final_SEMENT):
+        quant_final_SEMENT = final_SEMENT
     else:
-        quant_final_ssement = wrap_with_quantifier(final_ssement)
+        quant_final_SEMENT = wrap_with_quantifier(final_SEMENT)
 
     # wrap with 'unknown' and overwrite EQs
-    unknown = POGG.mrs_algebra.create_base_SSEMENT('unknown')
-    wrapped_ssement = POGG.mrs_algebra.op_final(unknown, quant_final_ssement, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
-    generate_from = overwrite_eqs(wrapped_ssement)
+    unknown = POGG.mrs_algebra.create_base_SEMENT('unknown')
+    wrapped_SEMENT = POGG.mrs_algebra.op_final(unknown, quant_final_SEMENT, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
+    generate_from = overwrite_eqs(wrapped_SEMENT)
 
     generate_mrs_string = simplemrs.encode(generate_from, indent=True)
 
@@ -718,28 +718,28 @@ def wrap_and_generate_to_file(final_ssement, filename):
                 file.write(r.get('surface') + "\n")
 
 
-def wrap_ssement(final_ssement):
+def wrap_SEMENT(final_SEMENT):
     """
     Wraps a refex with the "unknown" predicate, which the ERG requires for generation
-    :param final_ssement: SSEMENT to wrap
-    :type final_ssement: SSEMENT
-    :return: new wrapped SSEMENT
+    :param final_SEMENT: SEMENT to wrap
+    :type final_SEMENT: SEMENT
+    :return: new wrapped SEMENT
     :rtype: str
     """
-    # if the SSEMENT is empty, i.e. the conversion fully failed, return empty string
-    if final_ssement is None:
+    # if the SEMENT is empty, i.e. the conversion fully failed, return empty string
+    if final_SEMENT is None:
         return ""
 
     # quantify if not already quantified
-    if check_if_quantified(final_ssement):
-        quant_final_ssement = final_ssement
+    if check_if_quantified(final_SEMENT):
+        quant_final_SEMENT = final_SEMENT
     else:
-        quant_final_ssement = wrap_with_quantifier(final_ssement)
+        quant_final_SEMENT = wrap_with_quantifier(final_SEMENT)
 
     # wrap with 'unknown' and overwrite EQs
-    unknown = POGG.mrs_algebra.create_base_SSEMENT('unknown')
-    wrapped_ssement = POGG.mrs_algebra.op_final(unknown, quant_final_ssement, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
-    generate_from = overwrite_eqs(wrapped_ssement)
+    unknown = POGG.mrs_algebra.create_base_SEMENT('unknown')
+    wrapped_SEMENT = POGG.mrs_algebra.op_final(unknown, quant_final_SEMENT, POGG.mrs_algebra.VAR_LABELER.get_var_name('h'))
+    generate_from = overwrite_eqs(wrapped_SEMENT)
 
     generate_mrs_string = simplemrs.encode(generate_from, indent=True)
 

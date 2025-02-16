@@ -1,13 +1,42 @@
 import os
 import yaml
+import json
 import networkx as nx
 from delphin import ace
-from delphin.codecs import simplemrs
 from networkx import MultiDiGraph
 from POGG.data_regularization import regularize_node, regularize_edge
-from POGG.graph_to_mrs import load_lexicon, node_to_mrs, edge_to_mrs
+from POGG.graph_to_mrs import node_to_mrs, edge_to_mrs
 from POGG.graph_util import find_root
-from POGG.mrs_util import wrap_ssement
+from POGG.mrs_util import wrap_SEMENT
+
+import POGG.composition_library
+import POGG.semantic_constructions.base
+
+class POGGLexEntry:
+    """
+    Class to store a lexicon entry
+    """
+    def __init__(self, entry_key, entry_json):
+        self.lex_id = entry_key
+        self.composition = entry_json['composition']
+        for prop in entry_json['composition_arguments'].keys():
+            setattr(self, prop, entry_json['composition_arguments'][prop])
+
+class POGGLexicon:
+    """
+    Class to store lexicon information
+    """
+    def __init__(self, lexicon_filename):
+        lexicon_file = open(lexicon_filename)
+        lexicon_json = json.load(lexicon_file)
+        self.nodes = {}
+        for node in lexicon_json['nodes']:
+            self.nodes[node] = POGGLexEntry(node, lexicon_json['nodes'][node])
+
+        self.edges = {}
+        for edge in lexicon_json['edges']:
+            self.edges[edge] = POGGLexEntry(edge, lexicon_json['edges'][edge])
+
 
 class POGGenerator:
     """
@@ -23,7 +52,7 @@ class POGGenerator:
         self.data_directory = config['data_directory']
         self.graph_directory = config['graph_directory']
         self.results_directory = config['results_directory']
-        self.LEXICON = load_lexicon(config['LEXICON'])
+        self.LEXICON = POGGLexicon(config['LEXICON'])
         self.statistics = POGGStatistics()
 
 
@@ -34,6 +63,20 @@ class POGGenerator:
             graph = nx.drawing.nx_pydot.read_dot(graph_path)
             print(graph_name)
             return graph
+
+
+    def node_to_mrs(self, node):
+        # TODO: 02/06
+        # check the lexicon for the node information
+        # start using the new lexicon now ...
+        # the lexicon always returns a function and required information
+        # there should be another class / set of functions that extract info from the lexicon
+        # in order to pass to composition library
+        # don't tie it to the comp library because the comp library should just be able to be passed semantic info
+        # like noun_SEMENT should just take the pred_label, shouldn't have to do the work of extracting that from the lexicon
+        node_sement = POGG.composition_library.node_composition(self.LEXICON.nodes[node.node_name])
+        return node_sement
+
 
 
 
@@ -75,7 +118,7 @@ class POGGenerator:
     def generate_MRS_from_graph(self, graph):
         graph_mrs = self.graph_to_mrs_new(find_root(graph), graph)
         # TODO: THIS RETURNS A STRING... DO I WANT THAT?
-        return wrap_ssement(graph_mrs)
+        return wrap_SEMENT(graph_mrs)
 
 
     def generate_MRS_from_graphs(self, graphs):
@@ -126,7 +169,7 @@ class POGGGraph(MultiDiGraph):
     # TODO: DEAL WITH CYCLES
     def _traverse_graph(self, root, graph, node_counter, edge_counter):
         # create POGGNodeStats for root
-        root_node = POGGNode(root, "{}_{}".format(root, node_counter))
+        root_node = POGGNode(root, "{}_n{}".format(root, node_counter))
         # add to nodes list
         self.add_node(root_node)
         node_counter += 1
@@ -139,12 +182,38 @@ class POGGGraph(MultiDiGraph):
             # create POGGEdgeStats object
             edge = graph.get_edge_data(root, child)
             label = edge[0]['label']
-            edge_object = POGGEdgeStats(label, "{}_{}".format(label, edge_counter), root_node, child_node)
+            edge_object = POGGEdgeStats(label, "{}_e{}".format(label, edge_counter), root_node, child_node)
             edge_counter += 1
 
             self.add_edge(root_node, child_node, edge_stats=edge_object)
 
         return root_node
+
+    def get_node_by_id(self, id):
+        for node in self.nodes:
+            if node.node_id == id:
+                return node
+
+    def get_nodes_by_name(self, name):
+        matching_nodes = []
+        for node in self.nodes:
+            if node.node_name == name:
+                matching_nodes.append(node)
+        return matching_nodes
+
+
+    def get_edges_by_name(self, name):
+        matching_edges = []
+        for edge in self.edges.data():
+            if edge[2]['edge_stats'].edge_name == name:
+                matching_edges.append(edge)
+        return matching_edges
+
+
+    def get_edge_by_id(self, id):
+        for edge in self.edges.data():
+            if edge[2]['edge_stats'].edge_id == id:
+                return edge
 
 
 
@@ -192,6 +261,8 @@ class POGGGraphStats:
 
         # establish POGGNodeStats and POGGEdgeStats objects in a structure that is isomorphic to the input graph 
         # self._traverse_graph(find_root(graph), graph, 0, 0)
+
+
 
 
 

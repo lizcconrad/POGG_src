@@ -3,8 +3,7 @@
 # DOCUMENTED: 01/04/2024
 import json
 import re
-import random
-import POGG.composition_library
+import POGG.semantic_constructions.base
 import POGG.data_regularization
 
 # TODO: graph selection? based on complexity? offload to graph_util.py perhaps

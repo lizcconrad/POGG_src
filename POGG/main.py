@@ -81,7 +81,7 @@ for filename in os.listdir(graph_directory):
                 new_edge_name = "{}_{}".format(graph_name, e)
                 full_eval_info['edges'][new_edge_name] = eval_info['edges'][e]
 
-            mrs_string = POGG.mrs_util.wrap_ssement(graphmrs)
+            mrs_string = POGG.mrs_util.wrap_SEMENT(graphmrs)
             results_file.write(mrs_string + "\n")
 
             results = []

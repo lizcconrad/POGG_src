@@ -47,7 +47,7 @@ for filename in os.listdir(graph_directory):
         conversion_results = POGG.graph_to_mrs.graph_to_mrs(root, graph, lexicon)
         graphmrs = conversion_results[0]
 
-        mrs_string = POGG.mrs_util.wrap_ssement(graphmrs)
+        mrs_string = POGG.mrs_util.wrap_SEMENT(graphmrs)
 
         if mrs_string != "":
             results = POGG.mrs_util.generate(mrs_string)

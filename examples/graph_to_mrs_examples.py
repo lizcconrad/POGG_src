@@ -38,7 +38,7 @@ for filename in os.listdir(graph_directory):
         graphmrs = conversion_results[0]
         eval_info = conversion_results[1]
 
-        mrs_string = POGG.mrs_util.wrap_ssement(graphmrs)
+        mrs_string = POGG.mrs_util.wrap_SEMENT(graphmrs)
         print(mrs_string)
 
         results = POGG.mrs_util.generate(mrs_string)

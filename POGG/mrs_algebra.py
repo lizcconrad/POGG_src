@@ -15,7 +15,7 @@ from delphin import mrs, semi
 
 class VarIterator:
     """
-    Iterator to help with creating handles, indices, and variables in SSEMENTs
+    Iterator to help with creating handles, indices, and variables in SEMENTs
     """
     def __iter__(self):
         self.count = 0
@@ -63,7 +63,7 @@ class SEP(mrs.EP):
         super().__init__(predicate, label, args, lnk, surface, base)
 
 
-class SSEMENT(mrs.MRS):
+class SEMENT(mrs.MRS):
     """
     Wrapper class for the PyDelphin MRS object.
     An MRS is a tuple of the form <Hook, R, C> where...
@@ -74,14 +74,14 @@ class SSEMENT(mrs.MRS):
         ... R is a bag of EPs (see the EP class for details)
         ... C is a bag of handle constraints
 
-    However, a SSEMENT has additional information, namely the holes.
+    However, a SEMENT has additional information, namely the holes.
     It is a tuple of the form <Hook, Holes, Lzt, Eqs, Hcons> where ...
         ... Hook is a tuple of the form <GT, Ind, Xarg> (same as above)
         ... Holes is the list of holes, two-layer deep dict labeled per predicate in rels list
         ... Lzt is the list of SEPs (analogous to R in an MRS)
         ... Eqs is a list of equalities between variables
         ... Hcons is a bag of handle constraints
-    Basically, the only thing SSEMENT has that MRS does not is Holes, so I'm creating an object that uses
+    Basically, the only thing SEMENT has that MRS does not is Holes, so I'm creating an object that uses
     the PyDelphin MRS object and points to pieces of it, but also has Holes
 
     One other small addition is the LTOP, which PyDelphin does not have,
@@ -115,9 +115,10 @@ class SSEMENT(mrs.MRS):
         self.eqs = eqs
 
 
-# global variable labeler for creating new SSEMENTS
+# global variable labeler for creating new SEMENTS
 # might not want to keep this here, not sure where to instantiate it
-config = yaml.safe_load(open("../config_data/global_config.yml"))
+# TODO: shouldn't be an absolute path ... should i make an MRS algebra object...? that seems insane idk
+config = yaml.safe_load(open("/Users/lizcconrad/Documents/PhD/POGG/POGG_project/POGG_src/config_data/global_config.yml"))
 SEMI = semi.load(config['SEMI'])
 VAR_LABELER = VarLabeler()
 
@@ -131,7 +132,7 @@ def reset_labeler():
 
 def get_holes(sep):
     """
-    Get the holes contributed by a particular SEP to send into a SSEMENT
+    Get the holes contributed by a particular SEP to send into a SEMENT
     holes dict looks like ...
     {
         'pred_label': {'ARG1': 'x0', 'ARG2': 'x1'}
@@ -175,21 +176,21 @@ def concretize(var_labeler, synopsis):
     return args_dict
 
 
-def create_base_SSEMENT(predicate, variables={}, index_arg='ARG0'):
+def create_base_SEMENT(predicate, variables={}, index_arg='ARG0'):
     """
-    Make the base case SSEMENT, that is a SSEMENT with only one SEP in it before any composition has occurred
+    Make the base case SEMENT, that is a SEMENT with only one SEP in it before any composition has occurred
     :param predicate: ERG predicate label
     :type predicate: str
     :param index_arg: which argument of the EP is considered the INDEX
     :type index_arg: str
-    :return: new SSEMENT with one SEP in it
-    :rtype: SSEMENT
+    :return: new SEMENT with one SEP in it
+    :rtype: SEMENT
     """
 
     # the purpose of the index_arg is because some SEPs will want to declare their own INDEX is that of one of their arguments
-    # that is, the INDEX of a SSEMENT with just _cute_a_1 should be the ARG1, not ARG0 of the cute sep
+    # that is, the INDEX of a SEMENT with just _cute_a_1 should be the ARG1, not ARG0 of the cute sep
     # because _cute_a_1 can be used both as a modifier (want ARG1 as INDEX) and predicatively (want ARG0 as INDEX),
-    # this function lets me determine at the time of creating the base SSEMENT what's happening
+    # this function lets me determine at the time of creating the base SEMENT what's happening
     # so at the time of starting composition that decision will have to be made somehow
 
     # TODO: ADDED DURING TESTING... just to prevent breaking
@@ -203,24 +204,24 @@ def create_base_SSEMENT(predicate, variables={}, index_arg='ARG0'):
     sep = SEP(predicate, VAR_LABELER.get_var_name('h'), args)
 
     # for variables, assume that the INDEX variable is the one with the passed in properties (e.g. singular)
-    return SSEMENT(None, sep.label, sep.args[index_arg], [sep], {sep.args[index_arg]: variables}, get_holes(sep))
+    return SEMENT(None, sep.label, sep.args[index_arg], [sep], {sep.args[index_arg]: variables}, get_holes(sep))
 
 
 def op_non_scopal_lbl_shared(functor, argument, hole_label):
     """
     Non-scopal (intersective) composition where the LBL is shared between SEPs (e.g. adjective modifying a noun)
     :param functor: functor EP, such as an adjective
-    :type functor: SSEMENT
+    :type functor: SEMENT
     :param argument: argument EP, such as the noun an adjective modifies
-    :type argument: SSEMENT
+    :type argument: SEMENT
     :param hole_label: Label of the hole being filled, e.g. ARG1
     :type hole_label: str
-    :return: composed SSEMENT
-    :rtype: SSEMENT
+    :return: composed SEMENT
+    :rtype: SEMENT
     """
 
     """Note: I have two non-scopal functions, even though that goes against the algebra slightly
-          because it is basically the "lexical entry" that should determine whether the LBL gets identified between two SSEMENTS
+          because it is basically the "lexical entry" that should determine whether the LBL gets identified between two SEMENTS
           however I'm not working with lexical entries . . . so i need to be able to add an eq between lbls when necessary
           sometimes you need to identify LBLs in non-scopal, sometimes you don't"""
 
@@ -239,7 +240,7 @@ def op_non_scopal_lbl_shared(functor, argument, hole_label):
     # Variables are not included in the algebra,
     # but I need the ability to specific syntactic properties on certain variables
     # e.g. singular/plural, so there is a dict mapping of variables to properties (which are mapped to values)
-    # the new dict at each step of composition is just the union of the dicts from each SSEMENT
+    # the new dict at each step of composition is just the union of the dicts from each SEMENT
     # variables = FUNC.variables + ARG.variables
 
     # hook
@@ -286,25 +287,25 @@ def op_non_scopal_lbl_shared(functor, argument, hole_label):
     new_variables.update(functor.variables)
     new_variables.update(argument.variables)
 
-    # None for GTOP, we're not at a final SSEMENT yet
-    return SSEMENT(None, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
+    # None for GTOP, we're not at a final SEMENT yet
+    return SEMENT(None, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
 
 
 def op_non_scopal_lbl_unshared(functor, argument, hole_label):
     """
         Non-scopal (intersective) composition where the LBL is unshared between SEPs (e.g. verb and its complements)
         :param functor: functor EP, such as an adjective
-        :type functor: SSEMENT
+        :type functor: SEMENT
         :param argument: argument EP, such as the noun an adjective modifies
-        :type argument: SSEMENT
+        :type argument: SEMENT
         :param hole_label: Label of the hole being filled, e.g. ARG1
         :type hole_label: str
-        :return: composed SSEMENT
-        :rtype: SSEMENT
+        :return: composed SEMENT
+        :rtype: SEMENT
         """
 
     """Note: I have two non-scopal functions, even though that goes against the algebra slightly
-          because it is basically the "lexical entry" that should determine whether the LBL gets identified between two SSEMENTS
+          because it is basically the "lexical entry" that should determine whether the LBL gets identified between two SEMENTS
           however I'm not working with lexical entries . . . so i need to be able to add an eq between lbls when necessary
           sometimes you need to identify LBLs in non-scopal, sometimes you don't"""
 
@@ -322,7 +323,7 @@ def op_non_scopal_lbl_unshared(functor, argument, hole_label):
     # Variables are not included in the algebra,
     # but I need the ability to specific syntactic properties on certain variables
     # e.g. singular/plural, so there is a dict mapping of variables to properties (which are mapped to values)
-    # the new dict at each step of composition is just the union of the dicts from each SSEMENT
+    # the new dict at each step of composition is just the union of the dicts from each SEMENT
     # variables = FUNC.variables + ARG.variables
 
     # hook
@@ -366,20 +367,20 @@ def op_non_scopal_lbl_unshared(functor, argument, hole_label):
     new_variables.update(functor.variables)
     new_variables.update(argument.variables)
 
-    # None for GTOP, we're not at a final SSEMENT yet
-    return SSEMENT(None, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
+    # None for GTOP, we're not at a final SEMENT yet
+    return SEMENT(None, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
 
 
 # TODO: add hole_label, like 'believes' ... not just RSTR
 def op_scopal(scoping, scoped):
     """
-    Scopal composition between SSEMENTS
-    :param scoping: Scoping SSEMENT
-    :type scoping: SSEMENT
-    :param scoped: Scoped SSEMENT
-    :type scoped: SSEMENT
-    :return: composed SSEMENT
-    :rtype: SSEMENT
+    Scopal composition between SEMENTS
+    :param scoping: Scoping SEMENT
+    :type scoping: SEMENT
+    :param scoped: Scoped SEMENT
+    :type scoped: SEMENT
+    :return: composed SEMENT
+    :rtype: SEMENT
     """
 
     # FUNC = semantic functor
@@ -397,13 +398,13 @@ def op_scopal(scoping, scoped):
     # Variables are not included in the algebra,
     # but I need the ability to specific syntactic properties on certain variables
     # e.g. singular/plural, so there is a dict mapping of variables to properties (which are mapped to values)
-    # the new dict at each step of composition is just the union of the dicts from each SSEMENT
+    # the new dict at each step of composition is just the union of the dicts from each SEMENT
     # variables = FUNC.variables + ARG.variables
 
     functor = scoping
     argument = scoped
 
-    # ARG0 of a quantifier should be identified with INDEX of scoped_ssement
+    # ARG0 of a quantifier should be identified with INDEX of scoped_SEMENT
     # TODO: apparently I need to actually ask for the hole_label
     hole_label = 'ARG0'
 
@@ -452,27 +453,27 @@ def op_scopal(scoping, scoped):
     new_variables.update(functor.variables)
     new_variables.update(argument.variables)
 
-    # None for GTOP, we're not at a final SSEMENT yet
-    return SSEMENT(None, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
+    # None for GTOP, we're not at a final SEMENT yet
+    return SEMENT(None, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
 
 
-def op_final(wrapper_ssement, full_ssement, final_top_label):
+def op_final(wrapper_SEMENT, full_SEMENT, final_top_label):
     """
     Similar to a scopal operator, a new 'unknown' predicate must be added because the ERG can't generate
     unless the INDEX is of type e, and most refexes have a top INDEX of type x, so a new predicate is added
     and then the GTOP is established as being QEQ to this new predicate
-    :param wrapper_ssement:
-    :type wrapper_ssement:
-    :param full_ssement:
-    :type full_ssement:
+    :param wrapper_SEMENT:
+    :type wrapper_SEMENT:
+    :param full_SEMENT:
+    :type full_SEMENT:
     :param final_top_label:
     :type final_top_label:
     :return:
     :rtype:
     """
 
-    # FUNC = wrapper_ssement
-    # ARG = full_ssement
+    # FUNC = wrapper_SEMENT
+    # ARG = full_SEMENT
     # HOLE = hole to be filled on the functor by composition (ARG)
     # ... result of composition ...
     # hook = FUNC.hook
@@ -485,10 +486,10 @@ def op_final(wrapper_ssement, full_ssement, final_top_label):
     # qeqs = FUNC.qeqs + ARG.qeqs + FUNC.holes[RSTR]=qARG.ltop
     # ... new qeq between RSTR of functor and the argument's LTOP
 
-    functor = wrapper_ssement
-    argument = full_ssement
+    functor = wrapper_SEMENT
+    argument = full_SEMENT
 
-    # ARG of the 'unknown' predicate is identified with the INDEX of the full_ssement
+    # ARG of the 'unknown' predicate is identified with the INDEX of the full_SEMENT
     hole_label = 'ARG'
 
     # hook ... new GTOP & top & index
@@ -530,6 +531,6 @@ def op_final(wrapper_ssement, full_ssement, final_top_label):
     new_variables.update(functor.variables)
     new_variables.update(argument.variables)
 
-    return SSEMENT(new_top, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
+    return SEMENT(new_top, new_ltop, new_index, new_seps, new_variables, new_holes, new_eqs, new_qeqs)
 
 
