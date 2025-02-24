@@ -8,6 +8,14 @@ build:
 python:
   install:
     - requirements: docs/requirements.txt
+    # Install python package before building the docs
+    - method: pip
+      path: ./POGG_org
 
 sphinx:
   configuration: docs/source/conf.py
+  fail_on_warning: true
+
+formats:
+  - pdf
+  - epub
