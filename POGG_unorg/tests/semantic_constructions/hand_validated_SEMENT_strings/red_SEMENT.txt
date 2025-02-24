@@ -1,0 +1,4 @@
+[
+    INDEX: i2
+    RELS: < [ _red_a_1 LBL: h0 ARG0: i1 ARG1: i2 ] >
+]

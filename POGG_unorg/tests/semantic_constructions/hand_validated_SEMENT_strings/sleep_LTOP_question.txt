@@ -1,0 +1,23 @@
+[
+    LTOP: h0
+    INDEX: x1
+    RELS: < [ _sleep_v_1 LBL: h0 ARG0: x1 ARG1: x2 ] >
+]
+
+
+[
+    LTOP: h8
+    INDEX: x4
+    RELS: <
+        [ _exist_q LBL: h3  ARG0: x4 RSTR: h5 BODY: h6 ]
+        [ _cat_n_1 LBL: h7 ARG0: x4 ]
+    >
+    HCONS: < [ h5 qeq h7 ] >
+]
+
+... so bc the noun must be quantified and the LTOP of a quantifier (the functor, where the hook will come from) is NOT identified with its LBL,
+the LBL of "run" is never identified with anything else bc LTOP is unidentified
+
+
+
+... what about PP modifier? ... erm oh PP mods do have LBLs identified with the noun they modify teehee ok
