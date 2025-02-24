@@ -1,4 +1,0 @@
-[
-    INDEX: e1
-    RELS: < [ _sleep_v_1 LBL: h0 ARG0: e1 ARG1: i2 ] >
-]

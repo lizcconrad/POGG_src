@@ -1,4 +1,0 @@
-[
-    INDEX: u2
-    RELS: < [ _in_p_loc LBL: h0 ARG0: e1 ARG1: u2 ARG2: u3 ] >
-]

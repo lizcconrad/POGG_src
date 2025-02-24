@@ -1,8 +1,0 @@
-[
-    INDEX: x1 { PERS: 1, NUM sg }
-    RELS: <
-        [ pronoun_q LBL: h2  ARG0: x1 RSTR: h3 BODY: h4 ]
-        [ pron LBL: h0 ARG0: x1 ]
-    >
-    HCONS: < [ h3 qeq h4 ] >
-]

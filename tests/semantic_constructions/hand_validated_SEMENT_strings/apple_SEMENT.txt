@@ -1,4 +1,0 @@
-[
-    INDEX: x1
-    RELS: < [ _apple_n_1 LBL: h0 ARG0: x1 ] >
-]
